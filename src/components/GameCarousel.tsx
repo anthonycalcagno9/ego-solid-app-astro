@@ -1,85 +1,140 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Carousel,
   CarouselContent,
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
+  type CarouselApi,
 } from "@/components/ui/carousel";
+
+type Card = {
+  id: number;
+  image: string;
+  color: string;
+  hex: string;
+  classIconLeft: string;
+  classIconRight: string;
+};
+
+function getPrev(num: number) {
+  const len = gameData.length;
+  if (num === 0) {
+    return len - 1;
+  } else {
+    return num - 1;
+  }
+}
+
+function getNext(num: number) {
+  const len = gameData.length;
+  if (num === len - 1) {
+    return 0;
+  } else {
+    return num + 1;
+  }
+}
 
 const gameData = [
   {
     id: 1,
-    title: "Game Title 1",
-    description: "This is an exciting game with amazing graphics and gameplay.",
-    image: "/images/brimstone_tooltips.png",
+    image: "/images/Brimstone.png",
     color: "from-[#ff0000]",
-    cardExplanation:
-      'Brimstone’s Role is Disruptor and his Action Ability allows him to destroy large enemy units. A card’s Role defines its overall strategic identity, while also acting as its "cost". In a standard 5-Role deck, players can only play one card of each Role per push, meaning they could not play Brimstone alongside another Disruptor in the same turn.',
+    hex: "hover:bg-[#ff0000]",
+    classIconLeft: "/images/DisruptorLeft.png",
+    classIconRight: "/images/DisruptorRight.png",
   },
   {
     id: 2,
-    title: "Game Title 2",
-    description: "Another fantastic game with unique mechanics and story.",
     image: "/images/Paladin.png",
     color: "from-[#0080ff]",
-    cardExplanation:
-      "Paladin is a Tank, which affords him naturally high Power and a once-per-turn Action Ability that allows him to protect his allies from destruction. Once Paladin uses his Action Ability he is Rested for the remainder of the push.",
+    hex: "hover:bg-[#0080ff]",
+    classIconLeft: "/images/TankLeft.png",
+    classIconRight: "/images/TankRight.png",
   },
   {
     id: 3,
-    title: "Game Title 3",
-    description: "A thrilling adventure that will keep you engaged for hours.",
     image: "/images/Static.png",
     color: "from-[#80ff00]",
-    cardExplanation:
-      "Static is a Support unit, meaning he opts to buff his allies rather than attack the enemy. At 3-Speed Static may use his Action Ability earlier than slower units, and by speeding up an ally allows for more powerful abilities to trigger earlier in the push.",
+    hex: "hover:bg-[#80ff00]",
+    classIconLeft: "/images/SupportLeft.png",
+    classIconRight: "/images/SupportRight.png",
   },
   {
     id: 4,
-    title: "Game Title 3",
-    description: "A thrilling adventure that will keep you engaged for hours.",
     image: "/images/Regret.png",
     color: "from-[#8000ff]",
-    cardExplanation:
-      "Regret is a Tactician; the Role of strategy and manipulation. Regret’s Passive Ability causes opponents to gain a debilitating Curse status every time they use an Action Ability. Passive Abilities are in effect as long as the unit remains in play, and don’t need to be activated, making them very powerful, but vulnerable.",
+    hex: "hover:bg-[#8000ff]",
+    classIconLeft: "/images/TacticianLeft.png",
+    classIconRight: "/images/TacticianRight.png",
   },
   {
     id: 5,
-    title: "Game Title 3",
-    description: "A thrilling adventure that will keep you engaged for hours.",
     image: "/images/Rhapsody.png",
     color: "from-[#fc7e00]",
-    cardExplanation:
-      "Rhapsody is a Specialist, making him a highly effective unit in the right situation, but less effective in broader circumstances. Rhapsody swaps the Power of two units, which can alter the effectiveness of certain abilities. At the end of each push, players add up the Power of all of their surviving units and the player with the highest total wins the round, affording them Advantage in the next round and getting them one step closer to victory.",
+    hex: "hover:bg-[#fc7e00]",
+    classIconLeft: "/images/SpecialistLeft.png",
+    classIconRight: "/images/SpecialistRight.png",
   },
 ];
 
 export default function GameCarousel() {
+  const [currentCard, setCurrentCard] = useState<number>(0);
+  const [api, setApi] = React.useState<CarouselApi>();
+
+  React.useEffect(() => {
+    if (!api) {
+      return;
+    }
+
+    setCurrentCard(api.selectedScrollSnap());
+    console.log("current card = ", api.selectedScrollSnap());
+
+    api.on("select", () => {
+      console.log("on select happenin = ", api.selectedScrollSnap());
+      setCurrentCard(api.selectedScrollSnap());
+    });
+  }, [api]);
+
   return (
-    <div className="w-full min-h-[50vh] flex justify-center bg-white">
-      <div className="w-2/5 absolute z-20 bottom-0 border border-white border-4">
-        <Carousel className="w-full">
-          <CarouselContent className="">
-            {gameData.map((game) => (
+    <div
+      className={`w-full min-h-[50vh] relative flex justify-center bg-[#100C07]`}
+    >
+      <div className={`w-full lg:w-2/5 z-20 rounded-2xl absolute -top-40`}>
+        <Carousel
+          setApi={setApi}
+          opts={{ align: "start", loop: true }}
+          className="w-full rounded-2xl"
+        >
+          <CarouselContent className="rounded-2xl">
+            {gameData.map((game, index) => (
               <CarouselItem
                 key={game.id}
-                className={`max-h-[800px] bg-gradient-to-t ${game.color} from-[25%] to-black`}
+                className={`max-h-[800px] rounded-2xl`}
               >
-                <div className="w-full h-full flex">
-                  <div className="w-full flex justify-center items-center gap-8">
+                <div
+                  className={`w-full h-full flex rounded-2xl bg-gradient-to-t ${game.color} from-[25%] to-black`}
+                >
+                  <div className="w-full flex rounded-2xl justify-center items-center gap-8">
                     <img
                       src={game.image}
-                      alt={game.title}
-                      className="max-w-full p-4 max-h-full object-scale-down"
+                      className="max-w-full max-h-full px-8 py-8 lg:p-4 object-scale-down"
                     />
                   </div>
                 </div>
               </CarouselItem>
             ))}
           </CarouselContent>
-          <CarouselPrevious className="left-6 absolute" />
-          <CarouselNext className="right-6 absolute" />
+          <CarouselPrevious
+            image={gameData[getPrev(currentCard)].classIconLeft}
+            className={`left-1 md:left-6 p-1 absolute ${gameData[getPrev(currentCard)].hex} hover:border hover:border-4 hover:border-black size-12 md:size-22`}
+            variant="ghost"
+          />
+          <CarouselNext
+            image={gameData[getNext(currentCard)].classIconRight}
+            className={`right-1 md:right-6 p-1 absolute ${gameData[getNext(currentCard)].hex} hover:border hover:border-4 hover:border-black size-12 md:size-22`}
+            variant="ghost"
+          />
         </Carousel>
       </div>
     </div>
