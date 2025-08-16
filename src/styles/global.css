@@ -74,6 +74,11 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+  --donkeykong: #0080ff;
+  --red: #ff0000;
+  --green: #80ff00;
+  --purple: #8000ff;
+  --orange: #fc7e00;
 }
 
 .dark {
@@ -121,8 +126,8 @@
 
 /* Register your custom font family and tell the browser where to find it. */
 @font-face {
-  font-family: 'BookAntiqua';
-  src: url('/fonts/bookantiqua.ttf') format('truetype');
+  font-family: "BookAntiqua";
+  src: url("/fonts/bookantiqua.ttf") format("truetype");
   font-weight: normal;
   font-style: normal;
   font-display: swap;
